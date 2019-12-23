@@ -1,0 +1,49 @@
+body{
+    overflow: auto;
+}
+.holder{
+    height: 30px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.character{
+    height: 30px;
+    display:inline-flex;
+    align-items: center;
+    justify-content: center;
+    width:50%;
+}
+.rolled{
+    height: 30px;
+    display:inline-flex;
+    align-items: center;
+    justify-content: center;
+    width:10%;
+}
+.mod{
+    height: 30px;
+    display:inline-flex;
+    align-items: center;
+    justify-content: center;
+    width:10%;
+}
+.turns{
+    height: 30px;
+    display:inline-flex;
+    align-items: center;
+    justify-content: center;
+    width:10%;
+}
+.end-turn{
+    height: 30px;  
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width:20%;
+}
+.button{
+}
+p{
+    margin:0px;
+}
