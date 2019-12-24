@@ -21,6 +21,7 @@ export const TurnPiece = props => (
     <button onClick={props.onClick} className="button">
       End Turn
     </button>
+    <button onClick={props.remove}>Remove</button>
     </div>
   </div>
 );

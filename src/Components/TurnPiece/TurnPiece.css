@@ -12,14 +12,14 @@ body{
     display:inline-flex;
     align-items: center;
     justify-content: center;
-    width:50%;
+    width:30%;
 }
 .rolled{
     height: 30px;
     display:inline-flex;
     align-items: center;
     justify-content: center;
-    width:10%;
+    width:30%;
 }
 .mod{
     height: 30px;

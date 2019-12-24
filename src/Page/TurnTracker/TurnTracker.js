@@ -15,10 +15,10 @@ class TurnTracker extends Component {
     numRolled: 9,
     checkerboard:[{
       color:'whitesmoke',
-      'background-color': 'gray'
+      'backgroundColor': 'gray'
     },{
       color:'gray',
-      'background-color': 'whitesmoke'
+      'backgroundColor': 'whitesmoke'
     }]
   };
 
@@ -26,18 +26,18 @@ class TurnTracker extends Component {
     const matcher = /.*[\d*]/i;
     initiative.sort((a, b) => {
       let diff = a.count - b.count;
-      console.log(diff +"first")
+      // console.log(diff +"first")
       if (diff === 0) {
         diff = (b.numRolled + b.modifier) - (a.numRolled + a.modifier);
-        console.log(diff +"second")
+        // console.log(diff +"second")
       }
       if (diff === 0) {
         diff = a.modifier - b.modifier;
-        console.log(diff +"third")
+        // console.log(diff +"third")
       }
       if (diff === 0 && matcher.test(a.name) && matcher.test(b.name) && a.count === b.count) {
         diff = parseInt(matcher.exec(a.name)) - parseInt(matcher.exec(b.name));
-        console.log(diff +"fourth")
+        // console.log(diff +"fourth")
       }
       if(diff>0){
         return 1
@@ -50,19 +50,14 @@ class TurnTracker extends Component {
 
   addInitiative = (numRolled, modifier, name) => {
     let arr = this.state.initiative;
-    let arr2 = this.state.initiative.map(e => e.count)
-    console.log(arr2);
     let numTurns = this.state.initiative.count > 0 ? Math.min.apply(this.state.initiative.map(e => e.count)):0
-    console.log(numTurns)
     arr.push({
       numRolled: numRolled,
       modifier: modifier,
       name: name,
       count: numTurns
     });
-    console.log(this.state.initiative.map(e => e.count))
     arr = this.sortInitiative(arr);
-    console.log(arr)
     this.setState({
       initiative: arr
     });
@@ -75,18 +70,23 @@ class TurnTracker extends Component {
     this.setState(state);
   }
 
+  remove=(index)=>{
+    let state = this.state;
+    state.initiative.splice(index,1);
+    this.setState(state);
+  }
+
   showInitiative = () => {
     let arr = [];
     let sortedArr = this.sortInitiative(this.state.initiative)
     sortedArr.forEach((element,index) => {
       arr.push(
-        <TurnPiece key={index} style={this.state.checkerboard[index%2]} name={element.name} count={element.count} rolled={element.numRolled} modifier={element.modifier} onClick={()=>{this.cycleTurn(index)}} />
+        <TurnPiece key={index} style={this.state.checkerboard[index%2]} name={element.name} count={element.count} rolled={element.numRolled} modifier={element.modifier} onClick={()=>{this.cycleTurn(index)}} remove = {()=>this.remove(index)} />
       );
     });
     return arr;
   };
   addInitiativeBulk = () => {
-    console.log("adding stuff")
     for (let i = 0; i < this.state.count; i++) {
       this.addInitiative(
         this.state.numRolled,
@@ -113,7 +113,6 @@ class TurnTracker extends Component {
 
   handleChange = (event) => {
     let obj = this.state;
-    console.log(event.target.name)
     obj[event.target.name] = event.target.value;
     this.setState(obj);
   };
@@ -138,7 +137,7 @@ class TurnTracker extends Component {
             value={this.state.numRolled}
             type="text"
             onChange={this.numValidate}
-            name="totalInitiative"
+            name="numRolled"
           />
           <label>Modifier</label>
           <input
