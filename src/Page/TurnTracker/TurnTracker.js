@@ -222,8 +222,6 @@ class TurnTracker extends Component {
           onChange={this.numValidate}
           name="count"
         />
-        <label>Amount Rolled:</label>
-        {this.addTurnButtons(null,(numRolled)=>this.addInitiativeBulk(numRolled))}
 
         <label>Modifier</label>
         <input
@@ -232,7 +230,7 @@ class TurnTracker extends Component {
           type="text"
           onChange={this.numValidate}
           name="modifier"
-        />
+          />
         <label>Name</label>
         <input
           className="name"
@@ -240,11 +238,13 @@ class TurnTracker extends Component {
           type="text"
           onChange={this.handleChange}
           name="name"
-        />
+          />
         <AddRemoveTurnButton
           click={() => this.addCharacter()}
           description="Add as Character"
-        />
+          />
+          <label>Amount Rolled:</label>
+          {this.addTurnButtons(null,(numRolled)=>this.addInitiativeBulk(numRolled))}
 
         <p>{this.state.message}</p>
         <div>{this.showCharacters()}</div>
