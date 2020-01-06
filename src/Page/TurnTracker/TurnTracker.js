@@ -60,7 +60,7 @@ class TurnTracker extends Component {
     });
     return initiative;
   };
-  
+
   addCharacter() {
     console.log("Triggered");
 
@@ -133,6 +133,10 @@ class TurnTracker extends Component {
         i > 0 ? this.state.name + i : this.state.name
       );
     }
+    let state = this.state;
+    state.modifier = 0;
+    state.name = "";
+    this.setState(state);
   };
 
   numValidate = event => {
