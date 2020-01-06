@@ -155,7 +155,11 @@ class TurnTracker extends Component {
 
   addCharacterInitiative(numRolled, character) {
     let state = this.state;
-    if (this.state.initiative.map(element => element.name).includes(character.name)) {
+    if (
+      this.state.initiative
+        .map(element => element.name)
+        .includes(character.name)
+    ) {
       state.message = "Character has already rolled.";
       this.setState(state);
     } else {
@@ -164,8 +168,8 @@ class TurnTracker extends Component {
       this.setState(state);
     }
   }
-  
-  addTurnButtons = (objectToAdd,funcToAddIt) => {
+
+  addTurnButtons = (objectToAdd, funcToAddIt) => {
     let arr = [];
     for (let i = 1; i < 21; i++) {
       let numRolled;
@@ -179,7 +183,7 @@ class TurnTracker extends Component {
 
       arr.push(
         <AddRemoveTurnButton
-          click={() => funcToAddIt(numRolled,objectToAdd)}
+          click={() => funcToAddIt(numRolled, objectToAdd)}
           description={i}
         />
       );
@@ -201,7 +205,9 @@ class TurnTracker extends Component {
           <p>{character.name}</p>
           <div>
             <p>{character.modifier}</p>
-            {this.addTurnButtons(character,(numRolled,character)=>this.addCharacterInitiative(numRolled,character))}
+            {this.addTurnButtons(character, (numRolled, character) =>
+              this.addCharacterInitiative(numRolled, character)
+            )}
           </div>
         </div>
       );
@@ -242,9 +248,17 @@ class TurnTracker extends Component {
         <AddRemoveTurnButton
           click={() => this.addCharacter()}
           description="Add as Character"
+<<<<<<< HEAD
           />
           <label>Amount Rolled:</label>
           {this.addTurnButtons(null,(numRolled)=>this.addInitiativeBulk(numRolled))}
+=======
+        />
+        <label>Amount Rolled:</label>
+        {this.addTurnButtons(null, numRolled =>
+          this.addInitiativeBulk(numRolled)
+        )}
+>>>>>>> c7392c657fc6a026a0cf0160b9d4b928fc420336
 
         <p>{this.state.message}</p>
         <div>{this.showCharacters()}</div>
