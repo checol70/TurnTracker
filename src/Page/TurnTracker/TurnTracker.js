@@ -155,7 +155,11 @@ class TurnTracker extends Component {
 
   addCharacterInitiative(numRolled, character) {
     let state = this.state;
-    if (this.state.initiative.map(element => element.name).includes(character.name)) {
+    if (
+      this.state.initiative
+        .map(element => element.name)
+        .includes(character.name)
+    ) {
       state.message = "Character has already rolled.";
       this.setState(state);
     } else {
@@ -164,8 +168,8 @@ class TurnTracker extends Component {
       this.setState(state);
     }
   }
-  
-  addTurnButtons = (objectToAdd,funcToAddIt) => {
+
+  addTurnButtons = (objectToAdd, funcToAddIt) => {
     let arr = [];
     for (let i = 1; i < 21; i++) {
       let numRolled;
@@ -179,7 +183,7 @@ class TurnTracker extends Component {
 
       arr.push(
         <AddRemoveTurnButton
-          click={() => funcToAddIt(numRolled,objectToAdd)}
+          click={() => funcToAddIt(numRolled, objectToAdd)}
           description={i}
         />
       );
@@ -201,7 +205,9 @@ class TurnTracker extends Component {
           <p>{character.name}</p>
           <div>
             <p>{character.modifier}</p>
-            {this.addTurnButtons(character,(numRolled,character)=>this.addCharacterInitiative(numRolled,character))}
+            {this.addTurnButtons(character, (numRolled, character) =>
+              this.addCharacterInitiative(numRolled, character)
+            )}
           </div>
         </div>
       );
@@ -222,8 +228,6 @@ class TurnTracker extends Component {
           onChange={this.numValidate}
           name="count"
         />
-        <label>Amount Rolled:</label>
-        {this.addTurnButtons(null,(numRolled)=>this.addInitiativeBulk(numRolled))}
 
         <label>Modifier</label>
         <input
@@ -245,6 +249,10 @@ class TurnTracker extends Component {
           click={() => this.addCharacter()}
           description="Add as Character"
         />
+        <label>Amount Rolled:</label>
+        {this.addTurnButtons(null, numRolled =>
+          this.addInitiativeBulk(numRolled)
+        )}
 
         <p>{this.state.message}</p>
         <div>{this.showCharacters()}</div>
