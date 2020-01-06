@@ -60,14 +60,18 @@ class TurnTracker extends Component {
     });
     return initiative;
   };
-  addCharacter() {
-    console.log("Triggered")
   
+  addCharacter() {
+    console.log("Triggered");
+
     let character = new Character(this.state.name, this.state.modifier);
     let state = this.state;
+    state.modifier = 0;
+    state.name = "";
     state.characters.push(character);
     this.setState(state);
   }
+
   addInitiative = (numRolled, modifier, name) => {
     let arr = this.state.initiative;
     let numTurns =
@@ -120,7 +124,8 @@ class TurnTracker extends Component {
     });
     return arr;
   };
-  addInitiativeBulk = (numRolled) => {
+
+  addInitiativeBulk = numRolled => {
     for (let i = 0; i < this.state.count; i++) {
       this.addInitiative(
         numRolled,
@@ -129,6 +134,7 @@ class TurnTracker extends Component {
       );
     }
   };
+
   numValidate = event => {
     if (event.target.value === "") {
       event.target.value = 0;
@@ -142,33 +148,40 @@ class TurnTracker extends Component {
       this.setState(state);
     }
   };
-  addCharacterInitiative(numRolled,modifier,name){
+
+  addCharacterInitiative(numRolled, character) {
     let state = this.state;
-    if(this.state.initiative.map((element)=>element.name).includes(name)){
-      state.message = "Character has already rolled."
+    if (this.state.initiative.map(element => element.name).includes(character.name)) {
+      state.message = "Character has already rolled.";
       this.setState(state);
-    }else{
-    this.addInitiative(numRolled,modifier,name)
-    state.message = "";
-    this.setState(state);
+    } else {
+      this.addInitiative(numRolled, character.modifier, character.name);
+      state.message = "";
+      this.setState(state);
+    }
   }
-}
-  addTurnButtons = ()=>{
-    let arr = []
-    for(let i=1; i< 21; i++){
-      let numRolled
-      if(i === 1){
+  
+  addTurnButtons = (objectToAdd,funcToAddIt) => {
+    let arr = [];
+    for (let i = 1; i < 21; i++) {
+      let numRolled;
+      if (i === 1) {
         numRolled = -10;
-      }else if (i === 20){
-        numRolled = 30
-      } else{
+      } else if (i === 20) {
+        numRolled = 30;
+      } else {
         numRolled = i;
       }
 
-      arr.push(<AddRemoveTurnButton click={()=>this.addInitiativeBulk(numRolled)} description = {i}/>)
+      arr.push(
+        <AddRemoveTurnButton
+          click={() => funcToAddIt(numRolled,objectToAdd)}
+          description={i}
+        />
+      );
     }
     return arr;
-  }
+  };
 
   handleChange = event => {
     let obj = this.state;
@@ -176,20 +189,21 @@ class TurnTracker extends Component {
     this.setState(obj);
   };
 
-  showCharacters=()=>{
+  showCharacters = () => {
     let arr = [];
-    this.state.characters.forEach((Element,index)=>{
+    this.state.characters.forEach((character, index) => {
       arr.push(
-      <div key = {index + "char"} style ={this.state.checkerboard[index%2]}>
-        <p>{Element.name}</p>
-        <div>
-          <p>{Element.modifier}</p>
-          {this.addTurnButtons()}
+        <div key={index + "char"} style={this.state.checkerboard[index % 2]}>
+          <p>{character.name}</p>
+          <div>
+            <p>{character.modifier}</p>
+            {this.addTurnButtons(character,(numRolled,character)=>this.addCharacterInitiative(numRolled,character))}
+          </div>
         </div>
-      </div>)
-    })
+      );
+    });
     return arr;
-  }
+  };
 
   render() {
     return (
@@ -205,8 +219,8 @@ class TurnTracker extends Component {
           name="count"
         />
         <label>Amount Rolled:</label>
-        {this.addTurnButtons()}
-        
+        {this.addTurnButtons(null,(numRolled)=>this.addInitiativeBulk(numRolled))}
+
         <label>Modifier</label>
         <input
           className="modifier"
@@ -223,13 +237,14 @@ class TurnTracker extends Component {
           onChange={this.handleChange}
           name="name"
         />
-        <AddRemoveTurnButton click = {()=> this.addCharacter()} description = "Add as Character"/>
+        <AddRemoveTurnButton
+          click={() => this.addCharacter()}
+          description="Add as Character"
+        />
 
         <p>{this.state.message}</p>
-        <div>
-          {this.showCharacters()}
-        </div>
-        </div>
+        <div>{this.showCharacters()}</div>
+      </div>
     );
   }
 }
