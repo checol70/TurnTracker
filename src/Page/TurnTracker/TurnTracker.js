@@ -62,8 +62,6 @@ class TurnTracker extends Component {
   };
 
   addCharacter() {
-    console.log("Triggered");
-
     let character = new Character(this.state.name, this.state.modifier);
     let state = this.state;
     state.modifier = 0;
@@ -82,7 +80,9 @@ class TurnTracker extends Component {
       numRolled: numRolled,
       modifier: modifier,
       name: name,
-      count: numTurns
+      count: numTurns,
+      totalDamage:0,
+      damageInputValue:0
     });
     arr = this.sortInitiative(arr);
     this.setState({
@@ -119,6 +119,11 @@ class TurnTracker extends Component {
             this.cycleTurn(index);
           }}
           remove={() => this.remove(index)}
+          damage = {()=>{console.log(index);console.log(element.totalDamage);console.log("Hurt!")}}
+          heal = {()=>{console.log(element.name);console.log(element.totalDamage);console.log("Heal!") }}
+          damageTaken = {element.totalDamage}
+          numValidate = {(event)=>{this.initiativeValidate(event.value,event.target)}}
+          value = {element.totalDamage}
         />
       );
     });
@@ -138,7 +143,9 @@ class TurnTracker extends Component {
     state.name = "";
     this.setState(state);
   };
-
+  initiativeValidate = event =>{
+    console.log(event.value)
+  }
   numValidate = event => {
     if (event.target.value === "") {
       event.target.value = 0;
@@ -185,6 +192,7 @@ class TurnTracker extends Component {
         <AddRemoveTurnButton
           click={() => funcToAddIt(numRolled, objectToAdd)}
           description={i}
+          key={i}
         />
       );
     }
@@ -248,17 +256,11 @@ class TurnTracker extends Component {
         <AddRemoveTurnButton
           click={() => this.addCharacter()}
           description="Add as Character"
-<<<<<<< HEAD
-          />
-          <label>Amount Rolled:</label>
-          {this.addTurnButtons(null,(numRolled)=>this.addInitiativeBulk(numRolled))}
-=======
         />
         <label>Amount Rolled:</label>
         {this.addTurnButtons(null, numRolled =>
           this.addInitiativeBulk(numRolled)
         )}
->>>>>>> c7392c657fc6a026a0cf0160b9d4b928fc420336
 
         <p>{this.state.message}</p>
         <div>{this.showCharacters()}</div>
