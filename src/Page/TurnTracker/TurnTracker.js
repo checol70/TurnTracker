@@ -103,7 +103,11 @@ class TurnTracker extends Component {
     this.sortInitiative(state.initiative)
     this.setState(state);
   };
-
+  newEncounter=()=>{
+    const state = this.state;
+    state.initiative = [];
+    this.setState(state);
+  }
   remove = index => {
     let state = this.state;
     state.initiative.splice(index, 1);
@@ -235,8 +239,9 @@ class TurnTracker extends Component {
   render() {
     return (
       <div>
+        <button onClick={()=>this.newEncounter()}>New Encounter</button>
         <div className="turn-holder">{this.showInitiative()}</div>
-
+      
         <label>Number of Creatures:</label>
         <input
           className="count"
