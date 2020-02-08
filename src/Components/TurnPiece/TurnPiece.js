@@ -16,8 +16,24 @@ export const TurnPiece = props => (
     <div className="turns" style={props.style}>
       <p>Turns: {props.count}</p>
     </div>
-    <div className = "end-turn" style={props.style}>
+    <div className = "hp">
+      <button onClick={props.damage}>
+        Damage
+      </button>
+      <input type="text"
+          className="damage-amount"
+          value={props.value}
+          onChange={props.numValidate}
+          name="damage-amount"
+          target={props.name}>
 
+      </input>
+      <button onClick={props.heal}>
+        Heal
+      </button>
+      <p>{props.damageTaken}</p>
+    </div>
+    <div className = "end-turn" style={props.style}>
     <button onClick={props.onClick} className="button">
       End Turn
     </button>

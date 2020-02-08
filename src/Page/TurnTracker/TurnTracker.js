@@ -14,7 +14,7 @@ class TurnTracker extends Component {
   state = {
     characters: [],
     initiative: [],
-    count: 1,
+    count: 10,
     name: "bill",
     modifier: 3,
     numRolled: 9,
@@ -31,7 +31,7 @@ class TurnTracker extends Component {
   };
 
   sortInitiative = initiative => {
-    const matcher = /.*[\d*]/i;
+    const matcher = /(\d\w*)/i;
     initiative.sort((a, b) => {
       let diff = a.count - b.count;
       // console.log(diff +"first")
@@ -50,7 +50,7 @@ class TurnTracker extends Component {
         a.count === b.count
       ) {
         diff = parseInt(matcher.exec(a.name)) - parseInt(matcher.exec(b.name));
-        // console.log(diff +"fourth")
+        console.log(matcher.exec(a.name))
       }
       if (diff > 0) {
         return 1;
@@ -58,12 +58,13 @@ class TurnTracker extends Component {
         return -1;
       } else return 0;
     });
+    let state = this.state;
+    state.initiative = initiative
+    this.setState(initiative);
     return initiative;
   };
 
   addCharacter() {
-    console.log("Triggered");
-
     let character = new Character(this.state.name, this.state.modifier);
     let state = this.state;
     state.modifier = 0;
@@ -73,30 +74,40 @@ class TurnTracker extends Component {
   }
 
   addInitiative = (numRolled, modifier, name) => {
+    // const matcher = /.*(\d*)/i;
     let arr = this.state.initiative;
     let numTurns =
       this.state.initiative.count > 0
         ? Math.min.apply(this.state.initiative.map(e => e.count))
         : 0;
-    arr.push({
-      numRolled: numRolled,
-      modifier: modifier,
-      name: name,
-      count: numTurns
-    });
-    arr = this.sortInitiative(arr);
-    this.setState({
-      initiative: arr
-    });
+    // while(this.state.initiative.map(e=>e.name).includes(name)){
+    //    if(!parseInt(matcher.exec(name)).isNaN()){
+    //     // name.splice()
+    //    }
+    // }
+      arr.push({
+        numRolled: numRolled,
+        modifier: modifier,
+        name: name,
+        count: numTurns,
+        totalDamage:0,
+        damageInputValue:0
+      });
+      this.sortInitiative(arr);
   };
 
   cycleTurn = index => {
     let state = this.state;
     state.initiative[index].count++;
     state.checkerboard = state.checkerboard.reverse();
+    this.sortInitiative(state.initiative)
     this.setState(state);
   };
-
+  newEncounter=()=>{
+    const state = this.state;
+    state.initiative = [];
+    this.setState(state);
+  }
   remove = index => {
     let state = this.state;
     state.initiative.splice(index, 1);
@@ -105,8 +116,7 @@ class TurnTracker extends Component {
 
   showInitiative = () => {
     let arr = [];
-    let sortedArr = this.sortInitiative(this.state.initiative);
-    sortedArr.forEach((element, index) => {
+    this.state.initiative.forEach((element, index) => {
       arr.push(
         <TurnPiece
           key={index}
@@ -119,6 +129,11 @@ class TurnTracker extends Component {
             this.cycleTurn(index);
           }}
           remove={() => this.remove(index)}
+          damage = {()=>{console.log(index);console.log(element.totalDamage);console.log("Hurt!")}}
+          heal = {()=>{console.log(element.name);console.log(element.totalDamage);console.log("Heal!") }}
+          damageTaken = {element.totalDamage}
+          numValidate = {(event)=>{this.initiativeValidate(event.target.value,event.target)}}
+          value = {element.totalDamage}
         />
       );
     });
@@ -130,15 +145,20 @@ class TurnTracker extends Component {
       this.addInitiative(
         numRolled,
         this.state.modifier,
-        i > 0 ? this.state.name + i : this.state.name
-      );
+        `${this.state.name}${i+1}`      
+        );
     }
     let state = this.state;
     state.modifier = 0;
     state.name = "";
     this.setState(state);
   };
+  initiativeValidate = (value, key) =>{
+    if(parseInt(value).isNaN()){
+      return;
+    }
 
+  }
   numValidate = event => {
     if (event.target.value === "") {
       event.target.value = 0;
@@ -185,6 +205,7 @@ class TurnTracker extends Component {
         <AddRemoveTurnButton
           click={() => funcToAddIt(numRolled, objectToAdd)}
           description={i}
+          key={i}
         />
       );
     }
@@ -218,8 +239,9 @@ class TurnTracker extends Component {
   render() {
     return (
       <div>
+        <button onClick={()=>this.newEncounter()}>New Encounter</button>
         <div className="turn-holder">{this.showInitiative()}</div>
-
+      
         <label>Number of Creatures:</label>
         <input
           className="count"
@@ -236,7 +258,7 @@ class TurnTracker extends Component {
           type="text"
           onChange={this.numValidate}
           name="modifier"
-        />
+          />
         <label>Name</label>
         <input
           className="name"
@@ -244,7 +266,7 @@ class TurnTracker extends Component {
           type="text"
           onChange={this.handleChange}
           name="name"
-        />
+          />
         <AddRemoveTurnButton
           click={() => this.addCharacter()}
           description="Add as Character"
