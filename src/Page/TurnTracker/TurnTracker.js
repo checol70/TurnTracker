@@ -40,7 +40,7 @@ class TurnTracker extends Component {
         // console.log(diff +"second")
       }
       if (diff === 0) {
-        diff = a.modifier - b.modifier;
+        diff = b.modifier - a.modifier;
         // console.log(diff +"third")
       }
       if (
@@ -239,7 +239,7 @@ class TurnTracker extends Component {
   render() {
     return (
       <div>
-        <button onClick={()=>this.newEncounter()}>New Encounter</button>
+        <button style = {{}} onClick={()=>this.newEncounter()}>New Encounter</button>
         <div className="turn-holder">{this.showInitiative()}</div>
       
         <label>Number of Creatures:</label>
